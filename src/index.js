@@ -11,43 +11,36 @@ const colors = [
 
 const startBtn = document.querySelector('[data-action="start"]');
 const stopBtn = document.querySelector('[data-action="stop"]');
-const body = document.body.style;
+const bodyRef = document.querySelector('body');
 
-startBtn.addEventListener('click', () => { timer.start(); });
-stopBtn.addEventListener('click', () => { timer.stop(); });
-
-// timer
-const timer = {
-    intervalId: null,
-    isActive: false,
-
-    start() { // запускаем счетчик
-        if(this.isActive) {
-            return;
-        }
-
-        const startTime = Date.now(); // запоминаем текущую дату
-        this.isActive = true;
-
-        this.intervalId = setInterval(() => { // что делать при нажатии на старт
-            showColor(colors); // вызываем функцию
-        }, 1000); 
-    },
-
-    stop() {
-        clearInterval(this.intervalId);
-        this.isActive = false;
-    },
-};
-
-// рандомное число
 const randomIntegerFromInterval = (min, max) => { 
     return Math.floor(Math.random() * (max - min + 1) + min);
 };
+
+startBtn.addEventListener('click', onBtnStart);
+stopBtn.addEventListener('click', onBtnStop);
 
 // находим цвет
 const showColor = items => { 
     const index = randomIntegerFromInterval(0, items.length - 1);
     const color = items.find(item => items.indexOf(item) === index);
-    body.backgroundColor = color;
-}
+    bodyRef.style.backgroundColor = color;
+};
+
+// timer
+
+ let intervalId = null;
+
+   function onBtnStart() {   
+        intervalId = setInterval(() => { 
+            showColor(colors); 
+            startBtn.setAttribute('disabled', '');
+        }, 1000); 
+    };
+
+    function onBtnStop() {
+        clearInterval(intervalId);
+        startBtn.disabled = false
+       
+    };
+
